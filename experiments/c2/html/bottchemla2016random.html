@@ -1,0 +1,309 @@
+<html>
+
+  <head>
+    <!--Shared set-up generally needs no change-->
+    <meta charset="utf-8"/>
+    <!--JS-->
+
+    <!-- external general utilities -->
+    <script src="../shared/js/jquery-1.11.1.min.js"></script>
+    <script src="../shared/full-projects/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../shared/js/underscore-min.js"></script>
+    <!-- if you want to draw stuff: -->
+    <!-- <script src="../shared/js/raphael-min.js"></script> -->
+
+    <!-- cocolab experiment logic -->
+    <script src="../shared/js/exp-V2.js"></script>
+    <script src="../shared/js/stream-V2.js"></script>
+
+    <!-- cocolab general utilities -->
+    <script src="../shared/js/mmturkey.js "></script>
+    <script src="../shared/js/browserCheck.js"></script>
+    <script src="../shared/js/utils.js"></script>
+    <!-- if you want to draw cute creatures (depends on raphael): -->
+    <!-- <script src="../shared/js/ecosystem.js"></script> -->
+
+    <!--CSS-->
+    <link href="../shared/full-projects/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../shared/css/cocolab-style.css" rel="stylesheet" type="text/css"/>
+    <!--Shared set-up ends-->
+
+    <!--Things specific to this experiment-->
+    <title>Cards and Symbols Experiment</title>
+    <script src="../js/bottchemla2016ExtrasRandom.js"></script>
+    <script src="../js/bottchemla2016.js"></script>
+    <script src="../js/randomParticipant.js"></script>
+    <link href="../css/local-style.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body onload="init();
+  ">
+
+    <noscript>This task requires JavaScript.</noscript>
+
+    <!--Always starts with the i0 slide:
+    A very brief description is sufficient: just give participants
+    a sense of what type of responses they will be providing and the length of
+    the experiment-->
+    <div class="slide" id="i0" >
+      <p id="cocolab">Stanford Linguistics</p>
+      <p id="instruct-text">
+        You will read a number of sentences and for each sentence select a picture which best represents the sentence.
+        The HIT should take ~10 minutes.
+        Please pay attention, thank you!
+      </p>
+
+      <button id="start_button" type="button">Start Experiment</button>
+
+    </div>
+
+    <!--Consent form used in Stanford linguistics department and is good for ling245.
+    Otherwise, modified to whatever is required for you given your affliation.
+    -->
+    <div class="slide" id="consent">
+      <div id="consent_1">
+        <p>
+          We invite you to participate in a research study on language production and comprehension.
+          Your experimenter will ask you to do a linguistic task such as reading sentences or words, naming pictures or describing scenes, making up sentences of your own, or participating in a simple language game.
+        </p>
+        <p>
+          There are no risks or benefits of any kind involved in this study.
+        </p>
+        <p>
+          You will be paid for your participation at the posted rate.
+        </p>
+        <p>
+          If you have read this form and have decided to participate in this experiment, please understand your participation is voluntary and you have the right to withdraw your consent or discontinue participation at any time without penalty or loss of benefits to which you are otherwise entitled.
+          You have the right to refuse to do particular tasks.
+          Your individual privacy will be maintained in all published and written data resulting from the study.
+          You may print this form for your records.
+        </p>
+      </div>
+      <div id="consent_2">
+        <p>
+          CONTACT INFORMATION:
+        </p>
+        <p>
+          If you have any questions, concerns or complaints about this research study, its procedures, risks and benefits, you should contact one of the Protocol Director Penelope Eckert (650)-725-1564.
+        </p>
+        <p>
+          If you are not satisfied with how this study is being conducted, or if you have any concerns, complaints, or general questions about the research or your rights as a participant, please contact the Stanford Institutional Review Board (IRB) to speak to someone independent of the research team at (650)-723-2480 or toll free at 1-866-680-2906.
+          You can also write to the Stanford IRB, Stanford University, 3000 El Camino Real, Five Palo Alto Square, 4th Floor, Palo Alto, CA 94306 USA.
+        </p>
+        <p>You may print this contact information for your records.</p>
+        <p>If you agree to participate, please proceed to the study tasks.</p>
+      </div>
+      <button id="consentButton" onclick="_s.button()">Continue</button>
+    </div>
+
+    <!--Instruction slide-->
+    <div class="slide" id="instructions">
+      <h3>Instructions</h3>
+      <p>
+        You will read a number English sentences and for each sentence you will be asked to select one of two pictures which best reflects the sentence.
+      </p>
+      <p>
+        At times both pictures will contain symbols, and at times one can may contain the text 'Better Picture?' which should be selected if you don't feel the other picture sufficiently captures the sentence meaning.
+      </p>
+      <p>
+        The following slides explains how you can use your computer to interact with this experiment.
+      </p>
+      <p>
+        Then, two slides will help to familiarise you with the task before the experiment begins.
+      </p>
+      <button id="instructionButton" onclick="_s.button()">Continue</button>
+    </div>
+
+
+    <div class="slide" id="keyboard">
+      <h3>Instructions</h3>
+      <p>
+        To complete this task you may use either your keyboard or your mouse.
+      </p>
+      <ul>
+      <li>To use your mouse, click on a picture or the button under a picture to select it, and click on the continue button to go to the next slide.
+      </li>
+
+        <li>To use your keyboard, use the left arrow on your keyboard to select the left picture, the right arrow on your keyboard to select the right picture, and use your space bar to continue.<br />
+        These keys are highlighted in the image below.</li>
+      </ul>
+      <img src="../images/keyboardshortcuts.jpg" alt="alternative text" width=700>
+
+      <p id="test">This message will be replaced with the functionality assigned to a keyboard key when pressed, for testing purposes.</p>
+
+
+      <button id="instructionButton" onclick="_s.button()">Click this button to continue</button>
+    </div>
+
+    <div class="slide" id="example">
+      <!-- <h3>Example</h3> -->
+      <p id="exampleStatus"></p>
+
+      <p id="exampleCondition"></p>
+
+      <div class="exampleContainerL" id="container">
+        <label for="exampleChoiceL">
+          <canvas class="canvas" id="exampleL"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="exampleChoiceL" type="radio" name="exampleChoice" value="0" onclick="_s.cardButton()">
+      </div>
+
+      <div class="exampleContainerR" id="container">
+        <label for="exampleChoiceR">
+          <canvas class="canvas" id="exampleR"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="exampleChoiceR" type="radio" name="exampleChoice" value="1" onclick="_s.cardButton()">
+      </div>
+
+
+      <div class="err" id="exampleErr"> <!-- filled by javascript --> </div>
+      <button id="continueButton" onclick="_s.button()" accesskey=null>Continue</button>
+
+    </div>
+
+
+    <div class="slide" id="begin">
+      <h3>Instructions</h3>
+      <p>
+        The experiment begins on the next slide.
+      </p>
+      <button id="beginButton" onclick="_s.button()">Continue</button>
+    </div>
+
+
+    <div class="slide" id="trial">
+
+      <p id="exampleStatus">&nbsp;</p>
+      <p id="trialCondition"></p>
+
+      <div class="primeOneContainerL" id="container">
+        <label for="primeOneChoiceL">
+          <canvas class="canvas" id="primeOneL"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="primeOneChoiceL" type="radio" name="primeOneChoice" value="0" onclick="_s.cardButton()">
+      </div>
+
+      <div class="primeOneContainerR" id="container">
+        <label for="primeOneChoiceR">
+          <canvas class="canvas" id="primeOneR"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="primeOneChoiceR" type="radio" name="primeOneChoice" value="1" onclick="_s.cardButton()">
+      </div>
+
+      <div class="primeTwoContainerL" id="container">
+        <label for="primeTwoChoiceL">
+          <canvas class="canvas" id="primeTwoL"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="primeTwoChoiceL" type="radio" name="primeTwoChoice" value="0" onclick="_s.cardButton()">
+      </div>
+
+      <div class="primeTwoContainerR" id="container">
+        <label for="primeTwoChoiceR">
+          <canvas class="canvas" id="primeTwoR"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="primeTwoChoiceR" type="radio" name="primeTwoChoice" value="1" onclick="_s.cardButton()">
+      </div>
+
+      <div class="responseContainerL" id="container">
+        <label for="responseChoiceL">
+          <canvas class="canvas" id="responseL"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="responseChoiceL" type="radio" name="responseChoice" value="0" onclick="_s.cardButton()">
+      </div>
+
+      <div class="responseContainerR" id="container">
+        <label for="responseChoiceR">
+          <canvas class="canvas" id="responseR"></canvas>
+        </label>
+        <br />
+        <input class="cardbutton" accesskey=null id="responseChoiceR" type="radio" name="responseChoice" value="1" onclick="_s.cardButton()">
+      </div>
+
+      <div class="err">Please select one of the options.</div>
+      <button id="continueButton" onclick="_s.button()" accesskey=null>Continue</button>
+    </div>
+
+
+    <!--Participant info; modified to suit your need-->
+    <div class="slide"  id="subj_info">
+      <div class="long_form">
+        <div class="subj_info_title">Additional information</div>
+        <p class="info">
+          Answering these questions is optional, but will help us understand your answers.
+          <br />
+          (Your answers will not affect your payment.)
+        </p>
+        <p>Did you read the instructions and do you think you did the HIT correctly?</p>
+        <label><input type="radio"  name="assess" value="No"/>No</label>
+        <label><input type="radio"  name="assess" value="Yes"/>Yes</label>
+        <label><input type="radio"  name="assess" value="Confused"/>I was confused</label>
+
+        <p>Were there any problems or bugs in the experiment?</p>
+        <textarea id="problems" rows="2" cols="50"></textarea>
+
+        <p>What do you think is a fair price for the work you did?</p>
+        <textarea id="fairprice" rows="1" cols="10"></textarea>
+
+        <p>Gender:
+          <select id="gender">
+            <label><option value=""/></label>
+            <label><option value="Male"/>Male</label>
+            <label><option value="Female"/>Female</label>
+            <label><option value="Other"/>Other</label>
+          </select>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          Age: <input type="text" id="age"/>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          Level Of Education:
+          <select id="education">
+            <label><option value="-1"/></label>
+            <label><option value="0"/>Some High School</label>
+            <label><option value="1"/>Graduated High School</label>
+            <label><option value="2"/>Some College</label>
+            <label><option value="3"/>Graduated College</label>
+            <label><option value="4"/>Hold a higher degree</label>
+          </select>
+        </p>
+
+        <p>Native Language: <input type="text" id="language"/></p>
+        <label>(the language(s) spoken at home when you were a child)</label>
+
+        <p>Did you enjoy the hit?</p>
+        <select id="enjoyment">
+          <label><option value="-1"></option></label>
+          <label><option value="0">Worse than the Average HIT</option></label>
+          <label><option value="1" >An Average HIT</option></label>
+          <label><option value="2">Better than average HIT</option></label>
+        </select>
+
+        <p>We would be interested in any comments you have about this experiment. Please type them here:</p>
+        <textarea id="comments" rows="3" cols="50"></textarea>
+        <br/>
+        <button id="submitButton" onclick="_s.submit()">Click this button to submit</button>
+      </div>
+    </div>
+
+    <!--No need to change anything below-->
+    <div id="thanks" class="slide js">
+      <p  class="big">Thank you for your time!</p>
+      <div class="csv" id="csv">
+    </div>
+
+    <div class="progress">
+      <span>Progress:</span>
+      <div class="bar-wrapper">
+        <div class="bar" width="0%">
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

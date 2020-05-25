@@ -1,0 +1,81 @@
+
+######################################
+COMPARE DUMMY MODEL TO NOT DUMMY MODEL
+######################################
+
+//for weak prime
+var data = [1,0,1,0,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,1,0,0,1,1,1,0,0,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,1,1,1,0,0,1,0,1,1,1,1,0,1,0,1,1,0,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,1,0,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,0,1,0,0,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,0,0,1,0,1,0,1,0,1,1,1,0,1,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,1,1,1,1] 
+
+//for strong prime
+//var data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,1,1,1,1,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,0,0,1,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,0,1,1,1,1,1] 
+
+
+var compareModels = function() {
+ var model1 = function() { return flip() ? 1 : 0 };
+ var model2 = function() { return flip() ? 1 : 0 };
+ var bestmodel = flip() ? model1 : model2;
+ var x = _.sample(data);
+ condition(bestmodel()==x)
+ var bestmodel_name = (bestmodel==model1) ? "dummy" : "not dummy"
+ return bestmodel_name
+}
+
+var opts = {method: "rejection", samples: 5000};
+var modelPosterior = Infer(opts, compareModels);
+viz(modelPosterior)
+
+####################
+PARAMETER ESTIMATION
+####################
+
+//192 trials with weak prime, implicature in 139 trials
+//192 trials with strong prime, implicature in 156 trials
+
+// for weak prime
+var model1 = function(){
+  var p = uniform(0, 1)
+  var resultpredictor = Binomial({n:192, p:p})
+  observe(resultpredictor, 139)
+  return p
+}
+
+var opts = {method: "rejection", samples: 5000}
+var modelPosterior = Infer(opts, model1)
+print("Next trial with weak prime has " + expectation(modelPosterior) + " chance of deriving implicature")
+viz.density(modelPosterior, {bounds: [0,1]})
+
+
+
+####################
+POSTERIOR PREDICTION
+####################
+
+// for weak prime
+var model1 = function(){
+  var p = uniform(0, 1)
+  observe(Binomial({n:192, p:p}), 139);
+  
+  // next 192 trials
+  var posteriorPredictive = binomial(p,192);
+  
+  // model before observe
+  var prior_p = uniform(0,1)
+  var priorPredictive = binomial(prior_p,192)
+  
+  return {
+    prior: prior_p, priorPredictive: priorPredictive,
+    posterior: p, posteriorPredictive: posteriorPredictive
+  };
+}
+
+var opts = {method: "rejection", samples: 5000}
+var modelPosterior = Infer(opts, model1)
+viz.marginals(modelPosterior);
+
+// REMINDER
+// prior over parameters --> prior before update
+// posterior over parameters --> prior after update
+// prior predictive --> data with not updated prior + model
+// posterior predictive --> data with updated prior + model
+
+

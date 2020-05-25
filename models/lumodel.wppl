@@ -1,0 +1,79 @@
+var states = [0, 6, 9]
+
+var statePrior = function() {
+  return uniformDraw(states)
+}
+
+var utterances = [
+  'some',
+  'all',
+  'some but not all',
+  'none'
+]
+
+var snacost = 1
+
+var cost = function(utterance,snacost){
+  var utt_cost_table = {
+    'some' : 1,
+    'all' : 1,
+    'some but not all' : snacost,
+    'none' : 1
+  }
+  utt_cost_table[utterance]
+}
+
+var alpha = 1
+
+var lexica = [{ 'some' : "only some" }, 
+              { 'some' : "at least some"}]
+
+var ludist = Categorical({ps: [0.5, 0.5], vs: [0, 1]})
+
+var lexicon_prior = function(ludist) {
+  var selection = sample(ludist)
+  return lexica[selection]
+}
+
+var utterance_meaning = function(utterance, lexicon){
+  var basic_meaning = {
+    "some" : lexicon["some"] == "only some" ? [6] : [6, 9],
+    "all" : [9],
+    "some but not all": [6],
+    "none" : [0]
+  }
+  return function(state) {return basic_meaning[utterance].includes(state) }
+}
+
+var literalListener = function(utterance,lexicon) {
+  return Infer({model: function(){
+    var state = uniformDraw(states)
+    var meaning = utterance_meaning(utterance,lexicon)
+    condition(meaning(state))
+    return state
+  }}
+)}
+
+var speaker = function(state, lexicon, snacost){
+  Infer({method:'enumerate',
+         model: function(){
+           var utterance = uniformDraw(utterances)
+           var listener = literalListener(utterance, lexicon)
+           factor(alpha * (listener.score(state) - cost(utterance,snacost)))
+           return utterance
+         }})}
+
+var listener = function(utterance,snacost,ludist){
+  Infer({method:'enumerate',
+         model (){
+           var lexicon = lexicon_prior(ludist)
+           var state = statePrior()
+           var speaker = speaker(state, lexicon, snacost)
+           factor(speaker.score(utterance))
+           return {state}
+         }})}
+
+json.write("results_alt.json",listener("some",1,Categorical({ps: [0.5, 0.5], vs: [0, 1]})))
+json.write("results_exh.json",listener("some",0.5,Categorical({ps: [0.5, 0.5], vs: [0, 1]})))
+json.write("results_weak.json",listener("some",1,Categorical({ps: [0.25, 0.75], vs: [0, 1]})))
+json.write("results_strong.json",listener("some",1,Categorical({ps: [0.75, 0.25], vs: [0, 1]})))
