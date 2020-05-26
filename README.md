@@ -54,6 +54,8 @@ To run the main Bayesian mixed effects logistic regression models reported in pa
 
 To run the post-hoc Bayesian mixed effects analysis investigating behavior bewteen groups, subsetted by expression type: `Rscript btwncond_select.r [exprname]` where `exprname` is one of `'Some'`, `'Number'`, or `'Ad-hoc'`. 
 
+Be sure to specify new output directories!
+
 Note: even when using a random seed, you may see slightly different results than we see in the paper because of your system architecture and/or your R version and/or your C++ compiler along with compiler optimization settings. Here are the settings we used: 
 
 ```
