@@ -14,6 +14,7 @@ expand = 3
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 d <- read_csv("../data/main/data.csv")
+d2 <- read_csv("../data/main/data2.csv")
 
 # HELPER SCRIPTS
 
