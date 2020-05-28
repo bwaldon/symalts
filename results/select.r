@@ -25,10 +25,10 @@ bayesmodel = function(condname){
   m <- brm(
     responseChoice ~ primeStrength * primeType + (1 + primeStrength*primeType|item) + (1 + primeStrength*primeType|workerid), 
     data = (d %>% filter(btwncondition == condname)),
-    # control = list(adapt_delta = 0.99, max_treedepth = 15),
+    # control = list(adapt_delta = 0.9, max_treedepth = 15),
     family = "bernoulli",
     seed = 123,
-    iter = 4000,
+    iter = 3000,
     # inits = 0
   )
   return(m)
