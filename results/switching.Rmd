@@ -2,7 +2,9 @@
 title: "Response switching in the picture-matching paradigm"
 author: "Brandon Waldon and Judith Degen"
 date: "5/29/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
