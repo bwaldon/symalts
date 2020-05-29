@@ -68,7 +68,7 @@ prod_graphs = function(condname) {
     ungroup() %>%
     mutate(YMin = Mean - CILow,
            YMax = Mean + CIHigh)
-
+  
   # VISUALIZE - CONDITION x EXPRESSION
   
   base = 6
@@ -117,7 +117,6 @@ d$btwncondition = factor(d$btwncondition)
 d$btwncondition = factor(d$btwncondition,levels(d$btwncondition)[c(1,3,4,2)])
 
 byConditionType <- d %>%
-  filter(primeStrength %in% c(0,1,3)) %>%
   group_by(btwncondition,primeType) %>%
   summarize(Mean = mean(responseChoice), 
             CILow =ci.low(responseChoice),
@@ -214,7 +213,7 @@ prod_rtgraphs = function(condname) {
   } else {
     plot <- plot + labs(y = "Mean response time (ms)")
   }
-    
+  
   # ggsave(paste(condname,".jpg",sep=""), width = 4, height = 2, units = "in", dpi = 1000)
   return(plot)
   
@@ -395,9 +394,9 @@ m <- brm(
 ## NUMBER OF CRITICAL RESPONSES PER CONDITION...
 
 summmary_noex <- d_noex %>%
-filter(trial_type == "response") %>%
-group_by(primeStrength) %>%
-summarize(n = n())
+  filter(trial_type == "response") %>%
+  group_by(primeStrength) %>%
+  summarize(n = n())
 
 summmary <- d %>%
   filter(trial_type == "response") %>%
@@ -419,7 +418,7 @@ t2 <- d_noex %>%
   mutate(wrongAO = sapply(strsplit(as.character(wrongAO), ","), function(x) x[[1]][1])) %>%
   filter(rightAO == wrongAO | rightAT == wrongAT)
 
-  # wrongA = fromJSON(pOwrongAnswer)[1],
+# wrongA = fromJSON(pOwrongAnswer)[1],
 
 ## INDIVIDUAL-LEVEL ANALYSES
 
@@ -435,7 +434,7 @@ ggplot(d_ind, aes(x=number_of_switches, fill = primeType)) +
   geom_histogram(position = "dodge") +
   theme(axis.text.x=element_text(angle=20,hjust=1,vjust=1)) +
   scale_x_continuous(breaks=seq(0,16,1)) +
- # geom_errorbar(aes(ymin=YMin,ymax=YMax),size = 0.25,width= 0.025,position = dodge) +  
+  # geom_errorbar(aes(ymin=YMin,ymax=YMax),size = 0.25,width= 0.025,position = dodge) +  
   labs(x = "Times response changed", y = "Number of people", fill = "Expression") 
 
 ggsave("~/Desktop/indvar.png", dpi = 600)
@@ -500,4 +499,3 @@ byConditionExpressionPrime <- d_rt %>%
 #   ungroup() %>%
 #   mutate(YMin = Mean - CILow,
 #          YMax = Mean + CIHigh)
- 

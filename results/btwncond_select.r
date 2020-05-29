@@ -27,7 +27,7 @@ bayesmodel = function(type) {
   subset <- d %>% filter(primeType == type)
   m <- brm(
     responseChoice ~ btwncondition + (1 + btwncondition | item) + (1 | workerid), 
-    data = subset %>% filter(primeStrength %in% c("0","1","3")),
+    data = subset,
     # To address divergent chains
     control = list(adapt_delta = 0.99, max_treedepth = 15),
     family = "bernoulli",
