@@ -3,8 +3,8 @@ title: "Response switching in the picture-matching paradigm"
 author: "Brandon Waldon and Judith Degen"
 date: "5/29/2020"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -23,11 +23,11 @@ d$primeStrength = factor(d$primeStrength)
 levels(d$primeStrength) <- c("Weak","Strong","Alternative","Baseline")
 ```
 
-This document supplements Waldon & Degen (2020): **Symmetric alternatives and semantic uncertainty modulate scalar inference** (Proceedings of Cog Sci). 
+This document supplements Waldon & Degen (2020): **Symmetric alternatives and semantic uncertainty modulate scalar inference** (Proceedings of Cog Sci). Here, we examine population-level variation in change in behavior relative to Baseline. We consider only participants for whom we have 4 non-excluded observations of target trial behavior after both Baseline and the priming condition of interest.
 
 # Exhaustive alternative priming
 
-Overall proportions of participants who exhibit higher, lower or equal ``Better Picture?" selections from exhaustive priming (relative to Baseline):
+Overall proportions of participants who exhibit higher, lower or equal ``Better Picture?" selections from (any sort of) exhaustive priming (relative to Baseline). 
 
 ```{r exhsummary, echo=FALSE}
 summarystats <- d %>%
@@ -71,7 +71,7 @@ toplot %>%
   scale_fill_viridis(discrete = TRUE) + 
   xlab(element_blank()) +
   theme_bw() +
-  labs(y = "Number of participants", fill = "Change in behavior", x = "Expression") +
+  labs(y = "Proportion of participants", fill = "Change in behavior", x = "Expression") +
   theme(text = element_text(size = base * expand / 2, face = "bold")) +
   ggtitle("Exhaustive alternative priming")
 ```
@@ -124,7 +124,7 @@ toplot2 %>%
   scale_fill_viridis(discrete = TRUE) + 
   xlab(element_blank()) +
   theme_bw() +
-  labs(y = "Number of participants", fill = "Change in behavior", x = "Expression") +
+  labs(y = "Proportion of participants", fill = "Change in behavior", x = "Expression") +
   ggtitle("Strong priming") +
   theme(text = element_text(size = base * expand / 2, face = "bold")) 
 ```
@@ -175,7 +175,7 @@ toplot3 %>%
   scale_fill_viridis(discrete = TRUE) + 
   xlab(element_blank()) +
   theme_bw() +
-  labs(y = "Number of participants", fill = "Change in behavior", x = "Expression") +
+  labs(y = "Proportion of participants", fill = "Change in behavior", x = "Expression") +
   theme(text = element_text(size = base * expand / 2, face = "bold")) +
   ggtitle("Weak priming")
 ```
