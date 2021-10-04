@@ -1,0 +1,181 @@
+---
+title: "Response switching in the picture-matching paradigm"
+author: "Brandon Waldon and Judith Degen"
+date: "5/29/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(viridis)
+knitr::opts_chunk$set(echo = TRUE)
+base = 6
+expand = 3
+
+d <- read_csv("../data/main/data.csv") 
+
+d$primeType = factor(d$primeType)
+levels(d$primeType) = c("Some", "Number", "Ad-hoc")
+
+d$primeStrength = factor(d$primeStrength)
+levels(d$primeStrength) <- c("Weak","Strong","Alternative","Baseline")
+```
+
+This document supplements Waldon & Degen (2020): **Symmetric alternatives and semantic uncertainty modulate scalar inference** (Proceedings of Cog Sci). Here, we examine population-level variation in change in behavior relative to Baseline. We consider only participants for whom we have 4 non-excluded observations of target trial behavior after both Baseline and the priming condition of interest.
+
+# Exhaustive alternative priming
+
+Overall proportions of participants who exhibit higher, lower or equal ``Better Picture?" selections from (any sort of) exhaustive priming (relative to Baseline). 
+
+```{r exhsummary, echo=FALSE}
+summarystats <- d %>%
+  filter(btwncondition != "alternative") %>%
+  filter(primeStrength == "Alternative" | primeStrength == "Baseline") %>%
+  group_by(workerid, primeStrength, primeType) %>%
+  summarize(n = n (), nPragmatic = sum(responseChoice == 1)) %>%
+  filter(n == 4) %>%
+  ungroup() %>%
+  spread(key = primeStrength, value = nPragmatic) %>%
+  drop_na(Alternative, Baseline) %>%
+  mutate(switch = Alternative - Baseline) %>%
+  summarize(morePrag = sum(switch > 0) / n(), lessPrag = sum(switch < 0) / n(), noChange = sum(switch == 0) / n())
+summarystats
+```
+
+```{r exhgraph, echo=FALSE}
+toplot <- d %>%
+  filter(btwncondition != "alternative") %>%
+  filter(primeStrength == "Alternative" | primeStrength == "Baseline") %>%
+  group_by(workerid, primeStrength,primeType) %>%
+  summarize(n = n (), nPragmatic = sum(responseChoice == 1)) %>%
+  filter(n == 4) %>%
+  ungroup() %>%
+  group_by(workerid)  %>%
+  spread(key = primeStrength, value = nPragmatic) %>%
+  drop_na(Alternative, Baseline) %>%
+  mutate(switch = Alternative - Baseline) %>%
+  group_by(primeType) %>%
+  summarize(morePrag = sum(switch > 0) / n(), lessPrag = sum(switch < 0) / n(), noChange = sum(switch == 0) / n())%>%
+  gather(key = "behavior", value = "count", -primeType) 
+
+toplot$behavior <- factor(toplot$behavior)
+levels(toplot$behavior) <- c("Less pragmatic",
+                             "More pragmatic",
+                             "No change")
+
+toplot %>%
+  ggplot(aes(x = primeType, y = count, fill = behavior)) +
+  geom_bar(stat="identity",position = "dodge") +
+  scale_fill_viridis(discrete = TRUE) + 
+  xlab(element_blank()) +
+  theme_bw() +
+  labs(y = "Proportion of participants", fill = "Change in behavior", x = "Expression") +
+  theme(text = element_text(size = base * expand / 2, face = "bold")) +
+  ggtitle("Exhaustive alternative priming")
+```
+
+
+# Strong priming
+
+```{r strongsummary, echo=FALSE}
+summarystats2 <- d %>%
+  # filter(btwncondition != "alternative") %>%
+  filter(primeStrength == "Strong" | primeStrength == "Baseline") %>%
+  group_by(workerid, primeStrength, primeType) %>%
+  summarize(n = n (), nPragmatic = sum(responseChoice == 1)) %>%
+  filter(n == 4) %>%
+  ungroup() %>%
+  # group_by(workerid) %>%
+  spread(key = primeStrength, value = nPragmatic) %>%
+  drop_na(Strong, Baseline) %>%
+  mutate(switch = Strong - Baseline) %>%
+  summarize(morePrag = sum(switch > 0) / n(), lessPrag = sum(switch < 0) / n(), noChange = sum(switch == 0) / n())
+# gather(key = "behavior", value = "count") 
+summarystats2
+```
+
+
+```{r stronggraph, echo=FALSE}
+toplot2 <- d %>%
+  # filter(btwncondition != "alternative") %>%
+  filter(primeStrength == "Strong" | primeStrength == "Baseline") %>%
+  group_by(workerid, primeStrength,primeType) %>%
+  summarize(n = n (), nPragmatic = sum(responseChoice == 1)) %>%
+  filter(n == 4) %>%
+  ungroup() %>%
+  group_by(workerid)  %>%
+  spread(key = primeStrength, value = nPragmatic) %>%
+  drop_na(Strong, Baseline) %>%
+  mutate(switch = Strong - Baseline) %>%
+  group_by(primeType) %>%
+  summarize(morePrag = sum(switch > 0) / n(), lessPrag = sum(switch < 0) / n(), noChange = sum(switch == 0) / n())%>%
+  gather(key = "behavior", value = "count", -primeType)
+
+toplot2$behavior <- factor(toplot2$behavior)
+levels(toplot2$behavior) <- c("Less pragmatic",
+                              "More pragmatic",
+                              "No change")
+
+toplot2 %>%
+  ggplot(aes(x = primeType, y = count, fill = behavior)) +
+  geom_bar(stat="identity",position = "dodge") +
+  scale_fill_viridis(discrete = TRUE) + 
+  xlab(element_blank()) +
+  theme_bw() +
+  labs(y = "Proportion of participants", fill = "Change in behavior", x = "Expression") +
+  ggtitle("Strong priming") +
+  theme(text = element_text(size = base * expand / 2, face = "bold")) 
+```
+
+# Weak priming
+
+```{r weaksummary, echo=FALSE}
+summarystats3 <- d %>%
+  # filter(btwncondition != "alternative") %>%
+  filter(primeStrength == "Weak" | primeStrength == "Baseline") %>%
+  group_by(workerid, primeStrength, primeType) %>%
+  summarize(n = n (), nPragmatic = sum(responseChoice == 1)) %>%
+  filter(n == 4) %>%
+  ungroup() %>%
+  # group_by(workerid) %>%
+  spread(key = primeStrength, value = nPragmatic) %>%
+  drop_na(Weak, Baseline) %>%
+  mutate(switch = Weak - Baseline) %>%
+  summarize(morePrag = sum(switch > 0) / n(), lessPrag = sum(switch < 0) / n(), noChange = sum(switch == 0) / n())
+# gather(key = "behavior", value = "count") 
+summarystats3
+```
+
+```{r weakgraph, echo=FALSE}
+toplot3 <- d %>%
+  # filter(btwncondition != "alternative") %>%
+  filter(primeStrength == "Weak" | primeStrength == "Baseline") %>%
+  group_by(workerid, primeStrength,primeType) %>%
+  summarize(n = n (), nPragmatic = sum(responseChoice == 1)) %>%
+  filter(n == 4) %>%
+  ungroup() %>%
+  group_by(workerid)  %>%
+  spread(key = primeStrength, value = nPragmatic) %>%
+  drop_na(Weak, Baseline) %>%
+  mutate(switch = Weak - Baseline) %>%
+  group_by(primeType) %>%
+  summarize(morePrag = sum(switch > 0) / n(), lessPrag = sum(switch < 0) / n(), noChange = sum(switch == 0) / n())%>%
+  gather(key = "behavior", value = "count", -primeType) 
+
+toplot3$behavior <- factor(toplot3$behavior)
+levels(toplot3$behavior) <- c("Less pragmatic",
+                              "More pragmatic",
+                              "No change")
+
+toplot3 %>%
+  ggplot(aes(x = primeType, y = count, fill = behavior)) +
+  geom_bar(stat="identity",position = "dodge") +
+  scale_fill_viridis(discrete = TRUE) + 
+  xlab(element_blank()) +
+  theme_bw() +
+  labs(y = "Proportion of participants", fill = "Change in behavior", x = "Expression") +
+  theme(text = element_text(size = base * expand / 2, face = "bold")) +
+  ggtitle("Weak priming")
+```

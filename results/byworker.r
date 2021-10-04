@@ -13,6 +13,8 @@ levels(d$primeType) = c("Some", "Number", "Ad-hoc")
 d$primeStrength = factor(d$primeStrength)
 levels(d$primeStrength) <- c("Weak","Strong","Alternative","Baseline")
 
+# EXHAUSTIVE ALTERNATIVE
+
 summarystats <- d %>%
   filter(btwncondition != "alternative") %>%
   filter(primeStrength == "Alternative" | primeStrength == "Baseline") %>%
@@ -160,8 +162,7 @@ toplot3 %>%
   theme(text = element_text(size = base * expand / 2, face = "bold")) +
   ggtitle("weak")
 
-ggsave(paste("switch.pdf",sep=""), width = 4, height = 2, units = "in", dpi = 1000)
-
+## Errata
 
 d_numbet <- d %>%
   filter(btwncondition != "alternative") %>%
